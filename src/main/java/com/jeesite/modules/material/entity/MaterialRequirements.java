@@ -21,7 +21,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 /**
  * 采购需求单Entity
  * @author 张雷
- * @version 2018-05-09
+ * @version 2018-05-11
  */
 @Table(name="material_requirements", alias="a", columns={
 		@Column(name="id", attrName="id", label="编号", isPK=true),

@@ -15,11 +15,11 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 /**
  * 采购需求单Entity
  * @author 张雷
- * @version 2018-05-09
+ * @version 2018-05-11
  */
 @Table(name="material_child", alias="a", columns={
 		@Column(name="id", attrName="id", label="编号", isPK=true),
-		@Column(name="fid", attrName="MaterialRequirements.id", label="父表主键"),
+		@Column(name="fid", attrName="materialRequirements.id", label="父表主键"),
 		@Column(name="pid", attrName="pid", label="编号"),
 		@Column(name="name", attrName="name", label="材料名称", queryType=QueryType.LIKE),
 		@Column(name="category", attrName="category", label="采购类型"),
@@ -32,7 +32,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 public class MaterialChild extends DataEntity<MaterialChild> {
 	
 	private static final long serialVersionUID = 1L;
-	private MaterialRequirements MaterialRequirements;		// 父表主键 父类
+	private MaterialRequirements materialRequirements;		// 父表主键 父类
 	private Integer pid;		// 编号
 	private String name;		// 材料名称
 	private String category;		// 采购类型
@@ -46,18 +46,18 @@ public class MaterialChild extends DataEntity<MaterialChild> {
 	}
 
 
-	public MaterialChild(MaterialRequirements MaterialRequirements){
-		this.MaterialRequirements = MaterialRequirements;
+	public MaterialChild(MaterialRequirements materialRequirements){
+		this.materialRequirements = materialRequirements;
 	}
 	
 	@NotBlank(message="父表主键不能为空")
 	@Length(min=0, max=64, message="父表主键长度不能超过 64 个字符")
 	public MaterialRequirements getMaterialRequirements() {
-		return MaterialRequirements;
+		return materialRequirements;
 	}
 
-	public void setMaterialRequirements(MaterialRequirements MaterialRequirements) {
-		this.MaterialRequirements = MaterialRequirements;
+	public void setMaterialRequirements(MaterialRequirements materialRequirements) {
+		this.materialRequirements = materialRequirements;
 	}
 	
 	@NotNull(message="编号不能为空")
