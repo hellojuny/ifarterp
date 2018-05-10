@@ -140,8 +140,8 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
 				</button>
-				<button type="button" class="btn btn-primary">
-					提交更改
+				<button type="button" class="btn btn-primary" onclick="submit()">
+					提交
 				</button>
 			</div>
 		</div><!-- /.modal-content -->
@@ -149,6 +149,8 @@
 </div>
 <% } %>
 <script>
+var childObjMap = new Map();
+var childIdMap = new Map();
 //初始化需求明细DataGrid对象
 $("#materialChildDataGrid").dataGrid({
 
@@ -163,30 +165,9 @@ $("#materialChildDataGrid").dataGrid({
 		{header:'父表主键', name:'MaterialRequirements.id', editable:true, hidden:true},
 		{header:'编号', name:'pid', width:150, editable:false, edittype:'text', editoptions:{'maxlength':'8', 'class':'form-control required digits'}},
 		{header:'材料名称', name:'name', width:150, editable:false, edittype:'text', editoptions:{'maxlength':'200', 'class':'form-control'}},
-		{header:'采购类型', name:'category', width:100, 
-			editable:false, edittype:'select', editoptions:{'class':'form-control',
-				items: $.merge([{dictLabel:'&nbsp;',dictValue:''}], ${@DictUtils.getDictListJson('purchase_type')}),
-				itemLabel: 'dictLabel', itemValue: 'dictValue', dataInit: function(element){
-					$(element).select2().on("change",function(){$(this).valid()});
-				}
-			}
-		},
-		{header:'材料类型', name:'type', width:100, 
-			editable:false, edittype:'select', editoptions:{'class':'form-control',
-				items: $.merge([{dictLabel:'&nbsp;',dictValue:''}], ${@DictUtils.getDictListJson('purchase_type')}),
-				itemLabel: 'dictLabel', itemValue: 'dictValue', dataInit: function(element){
-					$(element).select2().on("change",function(){$(this).valid()});
-				}
-			}
-		},
-		{header:'材料类别', name:'classes', width:100, 
-			editable:false, edittype:'select', editoptions:{'class':'form-control',
-				items: $.merge([{dictLabel:'&nbsp;',dictValue:''}], ${@DictUtils.getDictListJson('purchase_type')}),
-				itemLabel: 'dictLabel', itemValue: 'dictValue', dataInit: function(element){
-					$(element).select2().on("change",function(){$(this).valid()});
-				}
-			}
-		},
+		{header:'采购类型', name:'category', width:100, editable:false, edittype:'text', editoptions:{'maxlength':'200', 'class':'form-control'}},
+		{header:'材料类型', name:'type', width:100, editable:false, edittype:'text', editoptions:{'maxlength':'200', 'class':'form-control'}},
+		{header:'材料类别', name:'classes', width:100, editable:false, edittype:'text', editoptions:{'maxlength':'200', 'class':'form-control'}},
 		{header:'数量', name:'number', width:150, editable:true, edittype:'text', editoptions:{'class':'form-control number'}},
 		{header:'单位', name:'unit', width:100, 
 			editable:true, edittype:'select', editoptions:{'class':'form-control',
@@ -209,7 +190,7 @@ $("#materialChildDataGrid").dataGrid({
 	
 	// 编辑表格参数
 	editGrid: true,				// 是否是编辑表格
-	editGridInitRowNum: 1,		// 编辑表格的初始化新增行数
+	editGridInitRowNum: 0,		// 编辑表格的初始化新增行数
 	//editGridAddRowBtn: $('#materialChildDataGridAddRowBtn'),	// 子表增行按钮
 	//editGridAddRowInitData: {id: '', status: Global.STATUS_NORMAL},	// 新增行的时候初始化的数据
 	
@@ -217,6 +198,9 @@ $("#materialChildDataGrid").dataGrid({
 	editGridInputFormListName: 'materialChildList', // 提交的数据列表名
 	editGridInputFormListAttrs: 'status,id,MaterialRequirements.id,pid,name,category,type,classes,number,unit,', // 提交数据列表的属性字段
 	
+	afterInsertRow: function(rowid, rowdata, rowelem){
+		//debugger;
+	},
 	// 加载成功后执行事件
 	ajaxSuccess: function(data){
 		
@@ -226,10 +210,10 @@ $("#materialChildDataGrid").dataGrid({
 $(function () { $('#myModal').on('shown.bs.modal', function () {
 		$('#popDataGrid').dataGrid({
 			searchForm: $("#searchForm"),
+			autoGridHeight: function(){return 'auto'}, // 设置自动高度
+			multiselect: true,
 			columnModel: [
-				{header:'编号', name:'pid', index:'a.pid', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
-					return '<a href="${ctx}/material/materialInfo/form?id='+row.id+'" class="btnList" data-title="${text('编辑材料清单')}">'+(val||row.id)+'</a>';
-				}},
+				{header:'编号', name:'pid', index:'a.pid', width:150, align:"left"},
 				{header:'材料名称', name:'name', index:'a.name', width:150, align:"left"},
 				{header:'采购类型', name:'category', index:'a.category', width:150, align:"center", formatter: function(val, obj, row, act){
 					return js.getDictLabel(${@DictUtils.getDictListJson('purchase_type')}, val, '${text('未知')}', true);
@@ -244,12 +228,36 @@ $(function () { $('#myModal').on('shown.bs.modal', function () {
 				{header:'型号', name:'nmode', index:'a.nmode', width:150, align:"left"},
 				{header:'材质', name:'technique', index:'a.technique', width:150, align:"left"}
 			],
+			onSelectRow: function(rowid, status){
+				if (status) {
+					var obj = new Object();
+					obj.pid = $('#popDataGrid').getRowData(rowid).pid;
+					obj.name = $('#popDataGrid').getRowData(rowid).name;
+					obj.category = $('#popDataGrid').getRowData(rowid).category;
+					obj.type = $('#popDataGrid').getRowData(rowid).type;
+					obj.classes = $('#popDataGrid').getRowData(rowid).classes;
+					childObjMap.set(rowid, obj);
+					childIdMap.set(rowid, rowid);
+				} else {
+					childObjMap.delete(rowid);
+					childIdMap.delete(rowid);
+				}
+			},
 			// 加载成功后执行事件
 			ajaxSuccess: function(data){
+				
 			}
 		});
 	});
- });
+});
+ 
+function submit() {
+	childObjMap.forEach(function (item, key, mapObj) {
+		$("#materialChildDataGrid").addRowData(key, item);
+		$("#materialChildDataGrid").dataGrid('editRow', key, false);
+	});
+	$('#myModal').modal('hide');
+}
 </script>
 <script>
 $("#inputForm").validate({
