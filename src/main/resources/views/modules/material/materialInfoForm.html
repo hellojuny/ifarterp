@@ -1,0 +1,247 @@
+<% layout('/layouts/default.html', {title: '材料清单管理', libs: ['validate']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text(materialInfo.isNewRecord ? '新增材料清单' : '编辑材料清单')}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${materialInfo}" action="${ctx}/material/materialInfo/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<div class="form-unit">${text('基本信息')}</div>
+				<#form:hidden path="id"/>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required ">*</span> 材料名称：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:input path="name" maxlength="200" class="form-control required"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label class="control-label col-sm-6" title="">
+								<span class="required ">*</span> 采购类型：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-6">
+								<#form:select path="category" dictType="purchase_type" blankOption="true" class="form-control required" onchange="categoryChg()" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label class="control-label col-sm-6" title="">
+								<span class="required ">*</span> 材料类型：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-6">
+								<#form:select path="type" dictType="purchase_type" blankOption="true" class="form-control required" onchange="typeChg()" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label class="control-label col-sm-6" title="">
+							<span class="required ">*</span> 材料类别：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-6">
+								<#form:select path="classes" dictType="purchase_type" blankOption="true" class="form-control required" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-unit">${text('扩展信息')}</div>
+				<div class="row">
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label class="control-label col-sm-6" title="">
+								<span class="required hide">*</span> 品牌：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-6">
+								<#form:input path="brand" maxlength="200" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label class="control-label col-sm-6" title="">
+								<span class="required hide">*</span> 型号：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-6">
+								<#form:input path="nmode" maxlength="200" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label class="control-label col-sm-6" title="">
+								<span class="required hide">*</span> 材质：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-6">
+								<#form:input path="technique" maxlength="200" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-unit">${text('材料规格')}</div>
+				<div class="row">
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label class="control-label col-sm-6" title="">
+								<span class="required hide">*</span> 长：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-6">
+								<#form:input path="length" class="form-control number"/>cm
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label class="control-label col-sm-6" title="">
+								<span class="required hide">*</span> 宽：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-6">
+								<#form:input path="width" class="form-control number"/>cm
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label class="control-label col-sm-6" title="">
+								<span class="required hide">*</span> 高：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-6">
+								<#form:input path="height" class="form-control number"/>cm
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-unit">${text('框料参数')}</div>
+				<div class="row">
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label class="control-label col-sm-6" title="">
+								<span class="required hide">*</span> 框面宽：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-6">
+								<#form:input path="faceWidth" class="form-control number"/>cm
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label class="control-label col-sm-6" title="">
+								<span class="required hide">*</span> 槽深：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-6">
+								<#form:input path="grooveDeep" class="form-control number"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label class="control-label col-sm-6" title="">
+								<span class="required hide">*</span> 檐宽：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-6">
+								<#form:input path="eavesWidth" class="form-control number"/>cm
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-unit"></div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> 备注信息：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:textarea path="remarks" rows="4" maxlength="500" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('material:materialInfo:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+<script>
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+
+var purchaseTypeJson;
+$.ajax({
+	type:"POST",
+	url:"${ctx}/sys/dictData/treeData?dictType=purchase_type",
+	dataType:"json",
+	success: function(json){
+		purchaseTypeJson = json;
+		var category = $('#category option:selected').val();
+		var categorySelect = $("#category")[0];
+		categorySelect.options.length=1;
+		
+		var type = $('#type option:selected').val();
+		var typeSelect = $("#type")[0];
+		typeSelect.options.length=1;
+		
+		var classes = $('#classes option:selected').val();
+		var classesSelect = $("#classes")[0];
+		classesSelect.options.length=1;
+		debugger;
+		for (var i of json) {
+			if (i.pId == "0") {
+				categorySelect.options.add(new Option(i.name, i.value, false, i.value == category));
+			} else if (i.value.length == 4 && i.value.substr(0, 1) == category) {
+				typeSelect.options.add(new Option(i.name, i.value, false, i.value == type));
+			} else if (i.value.length == 7 && i.value.substr(0, 4) == type) {
+				classesSelect.options.add(new Option(i.name, i.value, false, i.value == classes));
+			}
+		}
+	}
+});
+
+function categoryChg() {
+	var category = $('#category option:selected').val();
+	
+	var typeSelect = $("#type")[0];
+	typeSelect.options.length=1;
+	
+	var classesSelect = $("#classes")[0];
+	classesSelect.options.length=1;
+	
+	for (var i of purchaseTypeJson) {
+		if (i.value.length == 4 && i.value.substr(0, 1) == category) {
+			typeSelect.options.add(new Option(i.name, i.value));
+		}
+	}
+}
+
+function typeChg() {
+	var type = $('#type option:selected').val();
+	
+	var classesSelect = $("#classes")[0];
+	classesSelect.options.length=1;
+	
+	for (var i of purchaseTypeJson) {
+		if (i.value.length == 7 && i.value.substr(0, 4) == type) {
+			classesSelect.options.add(new Option(i.name, i.value));
+		}
+	}
+}
+
+</script>

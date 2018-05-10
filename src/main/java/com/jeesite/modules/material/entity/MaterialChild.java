@@ -1,0 +1,125 @@
+/**
+ * Copyright (c) 2013-Now http://jeesite.com All rights reserved.
+ */
+package com.jeesite.modules.material.entity;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.NotNull;
+
+import com.jeesite.common.entity.DataEntity;
+import com.jeesite.common.mybatis.annotation.Column;
+import com.jeesite.common.mybatis.annotation.Table;
+import com.jeesite.common.mybatis.mapper.query.QueryType;
+
+/**
+ * 采购需求单Entity
+ * @author 张雷
+ * @version 2018-05-09
+ */
+@Table(name="material_child", alias="a", columns={
+		@Column(name="id", attrName="id", label="编号", isPK=true),
+		@Column(name="fid", attrName="MaterialRequirements.id", label="父表主键"),
+		@Column(name="pid", attrName="pid", label="编号"),
+		@Column(name="name", attrName="name", label="材料名称", queryType=QueryType.LIKE),
+		@Column(name="category", attrName="category", label="采购类型"),
+		@Column(name="type", attrName="type", label="材料类型"),
+		@Column(name="classes", attrName="classes", label="材料类别"),
+		@Column(name="number", attrName="number", label="数量"),
+		@Column(name="unit", attrName="unit", label="单位"),
+	}, orderBy="a.id ASC"
+)
+public class MaterialChild extends DataEntity<MaterialChild> {
+	
+	private static final long serialVersionUID = 1L;
+	private MaterialRequirements MaterialRequirements;		// 父表主键 父类
+	private Integer pid;		// 编号
+	private String name;		// 材料名称
+	private String category;		// 采购类型
+	private String type;		// 材料类型
+	private String classes;		// 材料类别
+	private Double number;		// 数量
+	private String unit;		// 单位
+	
+	public MaterialChild() {
+		this(null);
+	}
+
+
+	public MaterialChild(MaterialRequirements MaterialRequirements){
+		this.MaterialRequirements = MaterialRequirements;
+	}
+	
+	@NotBlank(message="父表主键不能为空")
+	@Length(min=0, max=64, message="父表主键长度不能超过 64 个字符")
+	public MaterialRequirements getMaterialRequirements() {
+		return MaterialRequirements;
+	}
+
+	public void setMaterialRequirements(MaterialRequirements MaterialRequirements) {
+		this.MaterialRequirements = MaterialRequirements;
+	}
+	
+	@NotNull(message="编号不能为空")
+	public Integer getPid() {
+		return pid;
+	}
+
+	public void setPid(Integer pid) {
+		this.pid = pid;
+	}
+	
+	@Length(min=0, max=200, message="材料名称长度不能超过 200 个字符")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	@Length(min=0, max=100, message="采购类型长度不能超过 100 个字符")
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	
+	@Length(min=0, max=100, message="材料类型长度不能超过 100 个字符")
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	@Length(min=0, max=100, message="材料类别长度不能超过 100 个字符")
+	public String getClasses() {
+		return classes;
+	}
+
+	public void setClasses(String classes) {
+		this.classes = classes;
+	}
+	
+	public Double getNumber() {
+		return number;
+	}
+
+	public void setNumber(Double number) {
+		this.number = number;
+	}
+	
+	@Length(min=0, max=100, message="单位长度不能超过 100 个字符")
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+	
+}
