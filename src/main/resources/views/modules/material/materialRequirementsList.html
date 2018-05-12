@@ -84,7 +84,7 @@ $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
 		{header:'需求单号', name:'no', index:'a.no', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
-			return '<a href="${ctx}/material/materialRequirements/form?id='+row.id+'" class="btnList" data-title="${text('编辑采购需求单')}">'+(val||row.id)+'</a>';
+			return '<a href="${ctx}/material/materialRequirements/form?no='+row.no+'" class="btnList" data-title="${text('编辑采购需求单')}">'+(val||row.no)+'</a>';
 		}},
 		{header:'申请人', name:'applicant.userName', index:'a.applicant', width:150, align:"center"},
 		{header:'申请日期', name:'applicationDate', index:'a.application_date', width:150, align:"center"},
