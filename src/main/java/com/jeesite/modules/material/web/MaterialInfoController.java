@@ -25,7 +25,7 @@ import com.jeesite.modules.material.service.MaterialInfoService;
 /**
  * 材料清单Controller
  * @author 张雷
- * @version 2018-05-09
+ * @version 2018-05-12
  */
 @Controller
 @RequestMapping(value = "${adminPath}/material/materialInfo")

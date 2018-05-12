@@ -3,23 +3,18 @@
  */
 package com.jeesite.modules.material.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.lang.DateUtils;
-import com.jeesite.common.lang.StringUtils;
 import com.jeesite.common.service.CrudService;
-import com.jeesite.modules.material.entity.MaterialRequirements;
+import com.jeesite.modules.common.utils.SeqUtils;
+import com.jeesite.modules.material.dao.MaterialChildDao;
 import com.jeesite.modules.material.dao.MaterialRequirementsDao;
 import com.jeesite.modules.material.entity.MaterialChild;
-import com.jeesite.modules.common.dao.CommonSeqDao;
-import com.jeesite.modules.common.entity.CommonSeq;
-import com.jeesite.modules.common.service.CommonSeqService;
-import com.jeesite.modules.material.dao.MaterialChildDao;
+import com.jeesite.modules.material.entity.MaterialRequirements;
 
 /**
  * 采购需求单Service
@@ -29,9 +24,6 @@ import com.jeesite.modules.material.dao.MaterialChildDao;
 @Service
 @Transactional(readOnly=true)
 public class MaterialRequirementsService extends CrudService<MaterialRequirementsDao, MaterialRequirements> {
-	
-	@Autowired
-	private CommonSeqDao commonSeqDao;
 	
 	@Autowired
 	private MaterialChildDao materialChildDao;
@@ -71,8 +63,7 @@ public class MaterialRequirementsService extends CrudService<MaterialRequirement
 	@Transactional(readOnly=false)
 	public void save(MaterialRequirements materialRequirements) {
 		if (materialRequirements.getIsNewRecord()) {
-			CommonSeqService seqService = new CommonSeqService();
-			int seqNumber = seqService.getNumber("material_requirements");
+			int seqNumber = SeqUtils.getNumber("material_requirements");
 			String no = "A" + DateUtils.getDate("yyMMdd") + seqNumber;
 			materialRequirements.setNo(no);
 		}

@@ -23,23 +23,6 @@ import com.jeesite.modules.common.dao.CommonSeqDao;
 public class CommonSeqService extends CrudService<CommonSeqDao, CommonSeq> {
 	
 	/**
-	 * 获取序列
-	 * @param tableName
-	 * @return
-	 */
-	public int getNumber(String tableName) {
-		CommonSeq seq = this.get(tableName, false);
-		if (seq == null) {
-			return 0;
-		} else {
-			int curNumber = seq.getNumber();
-			seq.setNumber(curNumber + 1);
-			this.save(seq);
-			return curNumber;
-		}
-	}
-	
-	/**
 	 * 获取单条数据
 	 * @param commonSeq
 	 * @return

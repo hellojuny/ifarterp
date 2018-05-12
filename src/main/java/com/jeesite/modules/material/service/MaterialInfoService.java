@@ -3,15 +3,14 @@
  */
 package com.jeesite.modules.material.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.service.CrudService;
-import com.jeesite.modules.material.entity.MaterialInfo;
+import com.jeesite.modules.common.utils.SeqUtils;
 import com.jeesite.modules.material.dao.MaterialInfoDao;
+import com.jeesite.modules.material.entity.MaterialInfo;
 
 /**
  * 材料清单Service
@@ -50,6 +49,11 @@ public class MaterialInfoService extends CrudService<MaterialInfoDao, MaterialIn
 	@Override
 	@Transactional(readOnly=false)
 	public void save(MaterialInfo materialInfo) {
+		if (materialInfo.getIsNewRecord()) {
+			int seqNumber = SeqUtils.getNumber("material_info");
+			String tid = String.valueOf(seqNumber);
+			materialInfo.setId(tid);
+		}
 		super.save(materialInfo);
 	}
 	
@@ -70,6 +74,8 @@ public class MaterialInfoService extends CrudService<MaterialInfoDao, MaterialIn
 	@Override
 	@Transactional(readOnly=false)
 	public void delete(MaterialInfo materialInfo) {
+		materialInfo.setName(materialInfo.getName() + materialInfo.getId());
+		super.save(materialInfo);
 		super.delete(materialInfo);
 	}
 	

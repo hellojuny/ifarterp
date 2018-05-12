@@ -17,7 +17,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
  * @version 2018-05-12
  */
 @Table(name="material_info", alias="a", columns={
-		@Column(name="pid", attrName="pid", label="编号", isPK=true),
+		@Column(name="id", attrName="id", label="编号", isPK=true),
 		@Column(name="name", attrName="name", label="材料名称", queryType=QueryType.LIKE),
 		@Column(name="category", attrName="category", label="采购类型"),
 		@Column(name="type", attrName="type", label="材料类型"),
@@ -37,7 +37,6 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 public class MaterialInfo extends DataEntity<MaterialInfo> {
 	
 	private static final long serialVersionUID = 1L;
-	private Integer pid;		// 编号
 	private String name;		// 材料名称
 	private String category;		// 采购类型
 	private String type;		// 材料类型
@@ -58,14 +57,6 @@ public class MaterialInfo extends DataEntity<MaterialInfo> {
 
 	public MaterialInfo(String id){
 		super(id);
-	}
-	
-	public Integer getPid() {
-		return pid;
-	}
-
-	public void setPid(Integer pid) {
-		this.pid = pid;
 	}
 	
 	@NotBlank(message="材料名称不能为空")

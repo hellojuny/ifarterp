@@ -202,7 +202,6 @@ $.ajax({
 		var classes = $('#classes option:selected').val();
 		var classesSelect = $("#classes")[0];
 		classesSelect.options.length=1;
-		debugger;
 		for (var i of json) {
 			if (i.pId == "0") {
 				categorySelect.options.add(new Option(i.name, i.value, false, i.value == category));
