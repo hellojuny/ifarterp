@@ -10,7 +10,7 @@ import com.jeesite.modules.common.entity.CommonSeq;
 /**
  * 序列DAO接口
  * @author 张雷
- * @version 2018-05-09
+ * @version 2018-05-12
  */
 @MyBatisDao
 public interface CommonSeqDao extends CrudDao<CommonSeq> {

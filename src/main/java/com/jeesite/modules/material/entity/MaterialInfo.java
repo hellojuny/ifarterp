@@ -14,11 +14,10 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 /**
  * 材料清单Entity
  * @author 张雷
- * @version 2018-05-09
+ * @version 2018-05-12
  */
 @Table(name="material_info", alias="a", columns={
-		@Column(name="id", attrName="id", label="编号", isPK=true),
-		@Column(name="pid", attrName="pid", label="编号"),
+		@Column(name="pid", attrName="pid", label="编号", isPK=true),
 		@Column(name="name", attrName="name", label="材料名称", queryType=QueryType.LIKE),
 		@Column(name="category", attrName="category", label="采购类型"),
 		@Column(name="type", attrName="type", label="材料类型"),

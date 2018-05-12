@@ -5,46 +5,37 @@ package com.jeesite.modules.common.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.service.CrudService;
 import com.jeesite.modules.common.entity.CommonSeq;
-import com.jeesite.modules.test.dao.TestDataChildDao;
 import com.jeesite.modules.common.dao.CommonSeqDao;
 
 /**
  * 序列Service
  * @author 张雷
- * @version 2018-05-09
+ * @version 2018-05-12
  */
 @Service
 @Transactional(readOnly=true)
 public class CommonSeqService extends CrudService<CommonSeqDao, CommonSeq> {
-	
-	@Autowired
-	private CommonSeqDao commonSeqDao;
 	
 	/**
 	 * 获取序列
 	 * @param tableName
 	 * @return
 	 */
-	public Integer getSeq(String tableName) {
-		CommonSeq seq = new CommonSeq();
-		seq.setTableName(tableName);
-		commonSeqDao.get(seq);
-		//seq = this.get(seq);
-		
-		if (null == seq) {
-			return -1;
+	public int getNumber(String tableName) {
+		CommonSeq seq = this.get(tableName, false);
+		if (seq == null) {
+			return 0;
 		} else {
-			int number = seq.getNumber();
-			seq.setNumber(number + 1);
-			//this.update(seq);
-			return number;
+			int curNumber = seq.getNumber();
+			seq.setNumber(curNumber + 1);
+			this.save(seq);
+			return curNumber;
 		}
 	}
 	

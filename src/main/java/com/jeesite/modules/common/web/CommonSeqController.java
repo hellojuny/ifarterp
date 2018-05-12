@@ -25,7 +25,7 @@ import com.jeesite.modules.common.service.CommonSeqService;
 /**
  * 序列Controller
  * @author 张雷
- * @version 2018-05-09
+ * @version 2018-05-12
  */
 @Controller
 @RequestMapping(value = "${adminPath}/common/commonSeq")
@@ -38,8 +38,8 @@ public class CommonSeqController extends BaseController {
 	 * 获取数据
 	 */
 	@ModelAttribute
-	public CommonSeq get(String id, boolean isNewRecord) {
-		return commonSeqService.get(id, isNewRecord);
+	public CommonSeq get(String tableName, boolean isNewRecord) {
+		return commonSeqService.get(tableName, isNewRecord);
 	}
 	
 	/**

@@ -16,7 +16,7 @@ import com.jeesite.modules.material.dao.MaterialInfoDao;
 /**
  * 材料清单Service
  * @author 张雷
- * @version 2018-05-09
+ * @version 2018-05-12
  */
 @Service
 @Transactional(readOnly=true)

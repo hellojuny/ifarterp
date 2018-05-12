@@ -18,6 +18,7 @@ import com.jeesite.modules.material.dao.MaterialRequirementsDao;
 import com.jeesite.modules.material.entity.MaterialChild;
 import com.jeesite.modules.common.dao.CommonSeqDao;
 import com.jeesite.modules.common.entity.CommonSeq;
+import com.jeesite.modules.common.service.CommonSeqService;
 import com.jeesite.modules.material.dao.MaterialChildDao;
 
 /**
@@ -69,16 +70,9 @@ public class MaterialRequirementsService extends CrudService<MaterialRequirement
 	@Override
 	@Transactional(readOnly=false)
 	public void save(MaterialRequirements materialRequirements) {
-		if (StringUtils.isBlank(materialRequirements.getId())) {
-			CommonSeq seq = new CommonSeq();
-			seq.setTableName("material_requirements");
-			seq = commonSeqDao.getByEntity(seq);
-			int seqNumber = 0;
-			if (null != seq) {
-				seqNumber = seq.getNumber();
-				seq.setNumber(seqNumber + 1);
-				commonSeqDao.update(seq);
-			}
+		if (materialRequirements.getIsNewRecord()) {
+			CommonSeqService seqService = new CommonSeqService();
+			int seqNumber = seqService.getNumber("material_requirements");
 			String no = "A" + DateUtils.getDate("yyMMdd") + seqNumber;
 			materialRequirements.setNo(no);
 		}

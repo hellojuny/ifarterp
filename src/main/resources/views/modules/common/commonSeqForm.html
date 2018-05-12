@@ -12,15 +12,16 @@
 		<#form:form id="inputForm" model="${commonSeq}" action="${ctx}/common/commonSeq/save" method="post" class="form-horizontal">
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
-				<#form:hidden path="id"/>
 				<div class="row">
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="form-group">
 							<label class="control-label col-sm-2" title="">
-								<span class="required ">*</span> 序列：<i class="fa icon-question hide"></i></label>
+								<span class="required ">*</span> 表名：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-5">
-								<#form:input path="number" maxlength="8" class="form-control required digits"/>
+
+								<#form:hidden path="isNewRecord"/>
+								<#form:input path="tableName" maxlength="64" readonly="${!commonSeq.isNewRecord}" class="form-control required"/>
 							</div>
 						</div>
 					</div>
@@ -29,9 +30,9 @@
 					<div class="col-xs-12">
 						<div class="form-group">
 							<label class="control-label col-sm-2" title="">
-								<span class="required ">*</span> 表名：<i class="fa icon-question hide"></i></label>
+								<span class="required ">*</span> 序列：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-5">
-								<#form:input path="tableName" maxlength="64" class="form-control required"/>
+								<#form:input path="number" maxlength="8" class="form-control required digits"/>
 							</div>
 						</div>
 					</div>
