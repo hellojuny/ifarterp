@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.lang.DateUtils;
 import com.jeesite.common.service.CrudService;
-import com.jeesite.modules.common.dao.CommonSeqDao;
 import com.jeesite.modules.common.utils.SeqUtils;
 import com.jeesite.modules.material.dao.MaterialChildDao;
 import com.jeesite.modules.material.dao.MaterialRequirementsDao;
@@ -20,14 +19,11 @@ import com.jeesite.modules.material.entity.MaterialRequirements;
 /**
  * 采购需求单Service
  * @author 张雷
- * @version 2018-05-09
+ * @version 2018-05-12
  */
 @Service
 @Transactional(readOnly=true)
 public class MaterialRequirementsService extends CrudService<MaterialRequirementsDao, MaterialRequirements> {
-	
-	@Autowired
-	private CommonSeqDao commonSeqDao;
 	
 	@Autowired
 	private MaterialChildDao materialChildDao;

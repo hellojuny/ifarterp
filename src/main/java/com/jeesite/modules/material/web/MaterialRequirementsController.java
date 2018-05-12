@@ -26,7 +26,7 @@ import com.jeesite.modules.material.service.MaterialRequirementsService;
 /**
  * 采购需求单Controller
  * @author 张雷
- * @version 2018-05-09
+ * @version 2018-05-12
  */
 @Controller
 @RequestMapping(value = "${adminPath}/material/materialRequirements")
@@ -39,8 +39,8 @@ public class MaterialRequirementsController extends BaseController {
 	 * 获取数据
 	 */
 	@ModelAttribute
-	public MaterialRequirements get(String id, boolean isNewRecord) {
-		return materialRequirementsService.get(id, isNewRecord);
+	public MaterialRequirements get(String no, boolean isNewRecord) {
+		return materialRequirementsService.get(no, isNewRecord);
 	}
 	
 	/**
