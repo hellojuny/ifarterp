@@ -12,7 +12,7 @@
 		<#form:form id="inputForm" model="${materialRequirements}" action="${ctx}/material/materialRequirements/save" method="post" class="form-horizontal">
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
-				<#form:hidden path="no"/>
+				<#form:hidden path="id"/>
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
@@ -88,7 +88,7 @@
 							<div class="form-group">
 								<label class="control-label">编　　号：</label>
 								<div class="control-inline">
-									<#form:input path="id" maxlength="8" class="form-control width-180"/>
+									<#form:input path="pid" maxlength="8" class="form-control width-180"/>
 								</div>
 							</div>
 						</div>
@@ -215,7 +215,7 @@ $(function () { $('#myModal').on('shown.bs.modal', function () {
 			autoGridHeight: function(){return 'auto'}, // 设置自动高度
 			multiselect: true,
 			columnModel: [
-				{header:'编号', name:'id', index:'a.id', width:150, align:"left"},
+				{header:'编号', name:'pid', index:'a.pid', width:150, align:"left"},
 				{header:'材料名称', name:'name', index:'a.name', width:150, align:"left"},
 				{header:'采购类型', name:'category', index:'a.category', width:150, align:"center", formatter: function(val, obj, row, act){
 					return js.getDictLabel(${@DictUtils.getDictListJson('purchase_type')}, val, '${text('未知')}', true);
@@ -231,9 +231,10 @@ $(function () { $('#myModal').on('shown.bs.modal', function () {
 				{header:'材质', name:'technique', index:'a.technique', width:150, align:"left"}
 			],
 			onSelectRow: function(rowid, status){
+				var tmpPid = $('#popDataGrid').getRowData(rowid).pid;
 				if (status) {
 					var obj = new Object();
-					obj.id = rowid;
+					obj.pid = tmpPid;
 					obj.name = $('#popDataGrid').getRowData(rowid).name;
 					obj.category = $('#popDataGrid').getRowData(rowid).category;
 					obj.type = $('#popDataGrid').getRowData(rowid).type;
@@ -241,18 +242,21 @@ $(function () { $('#myModal').on('shown.bs.modal', function () {
 					var tmpFid = new Object();
 					tmpFid.id = fid;
 					obj.materialRequirements = tmpFid;
-					childObjMap.set(rowid, obj);
-					childIdMap.set(rowid, rowid);
+					childObjMap.set(tmpPid, obj);
+					childIdMap.set(tmpPid, tmpPid);
 				} else {
-					childObjMap.delete(rowid);
-					childIdMap.delete(rowid);
+					childObjMap.delete(tmpPid);
+					childIdMap.delete(tmpPid);
 				}
 			},
 			afterInsertRow: function(rowid, rowdata, rowelem){
-				if (childIdMap.has(rowid)) {
+				debugger;
+				if (childIdMap.has(rowdata.pid)) {
 					$("#" + rowid + " :checkbox").prop("checked","checked");
 					$("#" + rowid + " :checkbox").prop("disabled","disabled");
 				}
+				
+				//childIdMap.set(rowid, rowid);
 			},
 			// 加载成功后执行事件
 			ajaxSuccess: function(data){
@@ -264,10 +268,12 @@ $(function () { $('#myModal').on('shown.bs.modal', function () {
  
 function submit() {
 	childObjMap.forEach(function (item, key, mapObj) {
+		var tmpItem = new Object();
+		tmpItem.pid = 
 		$("#materialChildDataGrid").addRowData(key, item);
 		$("#materialChildDataGrid").dataGrid('editRow', key, false);
 	});
-	$("#materialChildDataGrid").sortGrid('id', false);
+	$("#materialChildDataGrid").sortGrid('pid', false);
 	$('#myModal').modal('hide');
 }
 </script>

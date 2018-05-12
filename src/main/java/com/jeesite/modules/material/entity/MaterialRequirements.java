@@ -3,13 +3,13 @@
  */
 package com.jeesite.modules.material.entity;
 
-import org.hibernate.validator.constraints.Length;
 import com.jeesite.modules.sys.entity.User;
 import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.common.mybatis.annotation.JoinTable.Type;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.Length;
 import java.util.List;
 import com.jeesite.common.collect.ListUtils;
 
@@ -21,11 +21,10 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 /**
  * 采购需求单Entity
  * @author 张雷
- * @version 2018-05-11
+ * @version 2018-05-12
  */
 @Table(name="material_requirements", alias="a", columns={
-		@Column(name="id", attrName="id", label="编号", isPK=true),
-		@Column(name="no", attrName="no", label="需求单号", queryType=QueryType.LIKE),
+		@Column(name="no", attrName="no", label="需求单号", isPK=true),
 		@Column(name="applicant", attrName="applicant.userCode", label="申请人"),
 		@Column(name="application_date", attrName="applicationDate", label="申请日期"),
 		@Column(name="reviewer", attrName="reviewer.userCode", label="审批人"),
@@ -33,13 +32,13 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="review_status", attrName="reviewStatus", label="审核状态"),
 		@Column(includeEntity=DataEntity.class),
 	}, joinTable={
-		@JoinTable(type=Type.LEFT_JOIN, entity=User.class, attrName="applicant", alias="u3",
-			on="u3.user_code = a.applicant", columns={
+		@JoinTable(type=Type.LEFT_JOIN, entity=User.class, attrName="applicant", alias="u2",
+			on="u2.user_code = a.applicant", columns={
 				@Column(name="user_code", label="用户编码", isPK=true),
 				@Column(name="user_name", label="用户名称", isQuery=false),
 		}),
-		@JoinTable(type=Type.LEFT_JOIN, entity=User.class, attrName="reviewer", alias="u5",
-			on="u5.user_code = a.reviewer", columns={
+		@JoinTable(type=Type.LEFT_JOIN, entity=User.class, attrName="reviewer", alias="u4",
+			on="u4.user_code = a.reviewer", columns={
 				@Column(name="user_code", label="用户编码", isPK=true),
 				@Column(name="user_name", label="用户名称", isQuery=false),
 		}),
@@ -64,7 +63,6 @@ public class MaterialRequirements extends DataEntity<MaterialRequirements> {
 		super(id);
 	}
 	
-	@Length(min=0, max=64, message="需求单号长度不能超过 64 个字符")
 	public String getNo() {
 		return no;
 	}

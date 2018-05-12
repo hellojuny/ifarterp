@@ -5,7 +5,6 @@ package com.jeesite.modules.material.entity;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.NotNull;
 
 import com.jeesite.common.entity.DataEntity;
 import com.jeesite.common.mybatis.annotation.Column;
@@ -15,12 +14,11 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 /**
  * 采购需求单Entity
  * @author 张雷
- * @version 2018-05-11
+ * @version 2018-05-12
  */
 @Table(name="material_child", alias="a", columns={
 		@Column(name="id", attrName="id", label="编号", isPK=true),
-		@Column(name="fid", attrName="materialRequirements.id", label="父表主键"),
-		@Column(name="pid", attrName="pid", label="编号"),
+		@Column(name="fid", attrName="materialRequirements.no", label="父表主键"),
 		@Column(name="name", attrName="name", label="材料名称", queryType=QueryType.LIKE),
 		@Column(name="category", attrName="category", label="采购类型"),
 		@Column(name="type", attrName="type", label="材料类型"),
@@ -33,7 +31,6 @@ public class MaterialChild extends DataEntity<MaterialChild> {
 	
 	private static final long serialVersionUID = 1L;
 	private MaterialRequirements materialRequirements;		// 父表主键 父类
-	private Integer pid;		// 编号
 	private String name;		// 材料名称
 	private String category;		// 采购类型
 	private String type;		// 材料类型
@@ -58,15 +55,6 @@ public class MaterialChild extends DataEntity<MaterialChild> {
 
 	public void setMaterialRequirements(MaterialRequirements materialRequirements) {
 		this.materialRequirements = materialRequirements;
-	}
-	
-	@NotNull(message="编号不能为空")
-	public Integer getPid() {
-		return pid;
-	}
-
-	public void setPid(Integer pid) {
-		this.pid = pid;
 	}
 	
 	@Length(min=0, max=200, message="材料名称长度不能超过 200 个字符")
