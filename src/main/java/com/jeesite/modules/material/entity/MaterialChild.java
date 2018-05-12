@@ -17,18 +17,20 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
  */
 @Table(name="material_child", alias="a", columns={
 		@Column(name="id", attrName="id", label="编号", isPK=true),
-		@Column(name="fid", attrName="materialRequirements.no", label="父表主键", isPK=true),
+		@Column(name="mid", attrName="mid", label="编号"),
+		@Column(name="fid", attrName="materialRequirements.id", label="父表主键"),
 		@Column(name="name", attrName="name", label="材料名称", queryType=QueryType.LIKE),
 		@Column(name="category", attrName="category", label="采购类型"),
 		@Column(name="type", attrName="type", label="材料类型"),
 		@Column(name="classes", attrName="classes", label="材料类别"),
 		@Column(name="number", attrName="number", label="数量"),
 		@Column(name="unit", attrName="unit", label="单位"),
-	}, orderBy="a.id ASC, a.fid ASC"
+	}, orderBy="a.id ASC"
 )
 public class MaterialChild extends DataEntity<MaterialChild> {
 	
 	private static final long serialVersionUID = 1L;
+	private String mid;		// 编号
 	private MaterialRequirements materialRequirements;		// 父表主键 父类
 	private String name;		// 材料名称
 	private String category;		// 采购类型
@@ -46,6 +48,16 @@ public class MaterialChild extends DataEntity<MaterialChild> {
 		this.materialRequirements = materialRequirements;
 	}
 	
+	@Length(min=0, max=100, message="编号长度不能超过 100 个字符")
+	public String getMid() {
+		return mid;
+	}
+
+	public void setMid(String mid) {
+		this.mid = mid;
+	}
+	
+	@Length(min=0, max=64, message="父表主键长度不能超过 64 个字符")
 	public MaterialRequirements getMaterialRequirements() {
 		return materialRequirements;
 	}

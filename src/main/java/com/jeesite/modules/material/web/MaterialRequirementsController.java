@@ -39,8 +39,8 @@ public class MaterialRequirementsController extends BaseController {
 	 * 获取数据
 	 */
 	@ModelAttribute
-	public MaterialRequirements get(String no, boolean isNewRecord) {
-		return materialRequirementsService.get(no, isNewRecord);
+	public MaterialRequirements get(String id, boolean isNewRecord) {
+		return materialRequirementsService.get(id, isNewRecord);
 	}
 	
 	/**

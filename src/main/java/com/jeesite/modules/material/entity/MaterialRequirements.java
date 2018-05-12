@@ -24,7 +24,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
  * @version 2018-05-12
  */
 @Table(name="material_requirements", alias="a", columns={
-		@Column(name="no", attrName="no", label="需求单号", isPK=true),
+		@Column(name="id", attrName="id", label="需求单号", isPK=true),
 		@Column(name="applicant", attrName="applicant.userCode", label="申请人"),
 		@Column(name="application_date", attrName="applicationDate", label="申请日期"),
 		@Column(name="reviewer", attrName="reviewer.userCode", label="审批人"),
@@ -47,7 +47,6 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 public class MaterialRequirements extends DataEntity<MaterialRequirements> {
 	
 	private static final long serialVersionUID = 1L;
-	private String no;		// 需求单号
 	private User applicant;		// 申请人
 	private Date applicationDate;		// 申请日期
 	private User reviewer;		// 审批人
@@ -61,14 +60,6 @@ public class MaterialRequirements extends DataEntity<MaterialRequirements> {
 
 	public MaterialRequirements(String id){
 		super(id);
-	}
-	
-	public String getNo() {
-		return no;
-	}
-
-	public void setNo(String no) {
-		this.no = no;
 	}
 	
 	@NotNull(message="申请人不能为空")

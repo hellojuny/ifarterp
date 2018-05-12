@@ -64,8 +64,8 @@ public class MaterialRequirementsService extends CrudService<MaterialRequirement
 	public void save(MaterialRequirements materialRequirements) {
 		if (materialRequirements.getIsNewRecord()) {
 			int seqNumber = SeqUtils.getNumber("material_requirements");
-			String no = "A" + DateUtils.getDate("yyMMdd") + seqNumber;
-			materialRequirements.setNo(no);
+			String id = "A" + DateUtils.getDate("yyMMdd") + seqNumber;
+			materialRequirements.setId(id);
 		}
 		super.save(materialRequirements);
 		// 保存 MaterialRequirements子表
