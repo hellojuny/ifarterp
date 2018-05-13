@@ -22,6 +22,31 @@
 					</div>
 				</div>
 				<div class="form-group">
+					<label class="control-label">采购类型：</label>
+					<div class="control-inline">
+						<#form:radio path="purchaseType" dictType="purchase_reason" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">交货日期：</label>
+					<div class="control-inline">
+						<#form:input path="completeDate" readonly="true" maxlength="20" class="form-control Wdate-date"
+							dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">工单号：</label>
+					<div class="control-inline">
+						<#form:input path="contract" maxlength="100" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">客户名称：</label>
+					<div class="control-inline">
+						<#form:input path="cutomer" maxlength="100" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
 					<label class="control-label">申请人：</label>
 					<div class="control-inline width-120" >
 						<#form:treeselect id="applicant" title="${text('用户选择')}"
@@ -86,6 +111,12 @@ $('#dataGrid').dataGrid({
 		{header:'需求单号', name:'id', index:'a.id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
 			return '<a href="${ctx}/material/materialRequirements/form?id='+row.id+'" class="btnList" data-title="${text('编辑采购需求单')}">'+(val||row.id)+'</a>';
 		}},
+		{header:'采购类型', name:'purchaseType', index:'a.purchase_type', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('purchase_reason')}, val, '${text('未知')}', true);
+		}},
+		{header:'交货日期', name:'completeDate', index:'a.complete_date', width:150, align:"center"},
+		{header:'工单号', name:'contract', index:'a.contract', width:150, align:"left"},
+		{header:'客户名称', name:'cutomer', index:'a.cutomer', width:150, align:"left"},
 		{header:'申请人', name:'applicant.userName', index:'a.applicant', width:150, align:"center"},
 		{header:'申请日期', name:'applicationDate', index:'a.application_date', width:150, align:"center"},
 		{header:'审批人', name:'reviewer.userCode', index:'a.reviewer', width:150, align:"left"},
