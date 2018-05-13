@@ -69,7 +69,6 @@ public class MaterialInfo extends DataEntity<MaterialInfo> {
 		this.name = name;
 	}
 	
-	@NotBlank(message="采购类型不能为空")
 	@Length(min=0, max=100, message="采购类型长度不能超过 100 个字符")
 	public String getCategory() {
 		return category;
@@ -79,7 +78,6 @@ public class MaterialInfo extends DataEntity<MaterialInfo> {
 		this.category = category;
 	}
 	
-	@NotBlank(message="材料类型不能为空")
 	@Length(min=0, max=100, message="材料类型长度不能超过 100 个字符")
 	public String getType() {
 		return type;
@@ -89,7 +87,6 @@ public class MaterialInfo extends DataEntity<MaterialInfo> {
 		this.type = type;
 	}
 	
-	@NotBlank(message="材料类别不能为空")
 	@Length(min=0, max=100, message="材料类别长度不能超过 100 个字符")
 	public String getClasses() {
 		return classes;

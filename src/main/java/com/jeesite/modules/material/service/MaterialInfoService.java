@@ -3,6 +3,7 @@
  */
 package com.jeesite.modules.material.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,9 @@ import com.jeesite.modules.material.entity.MaterialInfo;
 @Service
 @Transactional(readOnly=true)
 public class MaterialInfoService extends CrudService<MaterialInfoDao, MaterialInfo> {
+	
+	@Autowired
+	protected MaterialInfoDao dao;
 	
 	/**
 	 * 获取单条数据

@@ -83,6 +83,7 @@
 			<div class="modal-body">
 				<#form:form id="searchForm" model="${materialInfo}" action="${ctx}/material/materialInfo/listData" method="post" class="form-inline"
 					data-page-no="${parameter.pageNo}" data-page-size="15" data-order-by="${parameter.orderBy}">
+					<input type="hidden" id="brand" name="brand">
 					<div class="row">
 						<div class="col-xs-4">
 							<div class="form-group">
@@ -150,8 +151,8 @@
 <% } %>
 <script>
 var fid = $("#id").val();
-var childObjMap = new Map();
-var childIdMap = new Map();
+var len = 0;
+//var childObjArray = new Array();
 //初始化需求明细DataGrid对象
 $("#materialChildDataGrid").dataGrid({
 
@@ -159,19 +160,20 @@ $("#materialChildDataGrid").dataGrid({
 	datatype: "local", // 设置本地数据
 	autoGridHeight: function(){return 'auto'}, // 设置自动高度
 	sortable: true,
-	sortname: 'id',
+	sortname: 'mid',
 	// 设置数据表格列
 	columnModel: [
 		{header:'状态', name:'status', editable:true, hidden:true},
-		{header:'父表主键', name:'materialRequirements.no', editable:true, hidden:true},
-		{header:'编号', name:'id', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'8', readonly: 'readonly', 'class':'form-control required '}},
+		{header:'主键', name:'id', editable:true, hidden:true},
+		{header:'编号', name:'mid', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'100', readonly: 'readonly', 'class':'form-control required '}},
+		{header:'父表主键', name:'materialRequirements.id', editable:true, hidden:true},
 		{header:'材料名称', name:'name', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'200', readonly: 'readonly', 'class':'form-control'}},
 		{header:'采购类型', name:'category', width:100, editable:true, edittype:'text', editoptions:{'maxlength':'200', readonly: 'readonly', 'class':'form-control'}},
 		{header:'材料类型', name:'type', width:100, editable:true, edittype:'text', editoptions:{'maxlength':'200', readonly: 'readonly', 'class':'form-control'}},
 		{header:'材料类别', name:'classes', width:100, editable:true, edittype:'text', editoptions:{'maxlength':'200', readonly: 'readonly', 'class':'form-control'}},
-		{header:'数量', name:'number', width:150, editable:true, edittype:'text', editoptions:{'class':'form-control number'}},
+		{header:'数量', name:'number', width:150, editable:true, edittype:'text', editoptions:{'class':'form-control number required'}},
 		{header:'单位', name:'unit', width:100, 
-			editable:true, edittype:'select', editoptions:{'class':'form-control',
+			editable:true, edittype:'select', editoptions:{'class':'form-control required',
 				items: $.merge([{dictLabel:'&nbsp;',dictValue:''}], ${@DictUtils.getDictListJson('unit')}),
 				itemLabel: 'dictLabel', itemValue: 'dictValue', dataInit: function(element){
 					$(element).select2().on("change",function(){$(this).valid()});
@@ -197,11 +199,10 @@ $("#materialChildDataGrid").dataGrid({
 	
 	// 编辑表格的提交数据参数
 	editGridInputFormListName: 'materialChildList', // 提交的数据列表名
-	editGridInputFormListAttrs: 'status,id,MaterialRequirements.id,pid,name,category,type,classes,number,unit,', // 提交数据列表的属性字段
+	editGridInputFormListAttrs: 'status,id,MaterialRequirements.id,mid,name,category,type,classes,number,unit,', // 提交数据列表的属性字段
 	
 	afterInsertRow: function(rowid, rowdata, rowelem){
-		//debugger;
-		childIdMap.set(rowid, rowid);
+		//childIdMap.set(rowdata.mid, rowdata.mid);
 	},
 	// 加载成功后执行事件
 	ajaxSuccess: function(data){
@@ -210,6 +211,14 @@ $("#materialChildDataGrid").dataGrid({
 });
 
 $(function () { $('#myModal').on('shown.bs.modal', function () {
+	
+		var midArray = new Array();
+		$("[name=mid]").each(function(i, el){
+			midArray.push(el.value);
+		});
+		len = midArray.length;
+		$("#brand").val(midArray);
+		
 		$('#popDataGrid').dataGrid({
 			searchForm: $("#searchForm"),
 			autoGridHeight: function(){return 'auto'}, // 设置自动高度
@@ -231,43 +240,54 @@ $(function () { $('#myModal').on('shown.bs.modal', function () {
 				{header:'材质', name:'technique', index:'a.technique', width:150, align:"left"}
 			],
 			onSelectRow: function(rowid, status){
-				if (status) {
+				/*if (status) {
 					var obj = new Object();
-					obj.id = rowid;
+					obj.mid = rowid;
 					obj.name = $('#popDataGrid').getRowData(rowid).name;
 					obj.category = $('#popDataGrid').getRowData(rowid).category;
 					obj.type = $('#popDataGrid').getRowData(rowid).type;
 					obj.classes = $('#popDataGrid').getRowData(rowid).classes;
 					var tmpFid = new Object();
-					tmpFid.no = fid;
+					tmpFid.id = fid;
 					obj.materialRequirements = tmpFid;
-					childObjMap.set(rowid, obj);
-					childIdMap.set(rowid, rowid);
+					childObjArray.push(obj);
 				} else {
 					childObjMap.delete(rowid);
-					childIdMap.delete(rowid);
-				}
+				}*/
 			},
 			afterInsertRow: function(rowid, rowdata, rowelem){
-				if (childIdMap.has(rowid)) {
+				/*if (childIdMap.has(rowid)) {
 					$("#" + rowid + " :checkbox").prop("checked","checked");
 					$("#" + rowid + " :checkbox").prop("disabled","disabled");
-				}
+				}*/
 			},
 			// 加载成功后执行事件
 			ajaxSuccess: function(data){
 				
 			}
-		});
+		}).trigger('reloadGrid');
 	});
 });
  
 function submit() {
-	childObjMap.forEach(function (item, key, mapObj) {
+	$('#popDataGrid').dataGrid("getGridParam", "selarrrow").forEach(function (rowid, idx) {
+		var tmpData = new Object();
+		tmpData.mid = rowid;
+		tmpData.name = $('#popDataGrid').getRowData(rowid).name;
+		tmpData.category = $('#popDataGrid').getRowData(rowid).category;
+		tmpData.type = $('#popDataGrid').getRowData(rowid).type;
+		tmpData.classes = $('#popDataGrid').getRowData(rowid).classes;
+		var tmpFid = new Object();
+		tmpFid.id = fid;
+		tmpData.materialRequirements = tmpFid;
+		$("#materialChildDataGrid").addRowData(len + idx, tmpData);
+		$("#materialChildDataGrid").dataGrid('editRow', len + idx, false);
+	});
+	/*childObjMap.forEach(function (item, key, mapObj) {
 		$("#materialChildDataGrid").addRowData(key, item);
 		$("#materialChildDataGrid").dataGrid('editRow', key, false);
-	});
-	$("#materialChildDataGrid").sortGrid('id', false);
+	});*/
+	$("#materialChildDataGrid").sortGrid('mid', false);
 	$('#myModal').modal('hide');
 }
 </script>
