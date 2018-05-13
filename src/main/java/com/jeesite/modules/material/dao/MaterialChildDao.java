@@ -10,7 +10,7 @@ import com.jeesite.modules.material.entity.MaterialChild;
 /**
  * 采购需求单DAO接口
  * @author 张雷
- * @version 2018-05-12
+ * @version 2018-05-13
  */
 @MyBatisDao
 public interface MaterialChildDao extends CrudDao<MaterialChild> {

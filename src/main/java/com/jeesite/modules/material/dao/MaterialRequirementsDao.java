@@ -10,7 +10,7 @@ import com.jeesite.modules.material.entity.MaterialRequirements;
 /**
  * 采购需求单DAO接口
  * @author 张雷
- * @version 2018-05-12
+ * @version 2018-05-13
  */
 @MyBatisDao
 public interface MaterialRequirementsDao extends CrudDao<MaterialRequirements> {

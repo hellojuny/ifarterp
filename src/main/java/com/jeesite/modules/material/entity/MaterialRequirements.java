@@ -3,13 +3,13 @@
  */
 package com.jeesite.modules.material.entity;
 
-import com.jeesite.modules.sys.entity.User;
+import org.hibernate.validator.constraints.Length;
+import java.util.Date;
 import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.common.mybatis.annotation.JoinTable.Type;
-import javax.validation.constraints.NotNull;
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.validator.constraints.Length;
+import com.jeesite.modules.sys.entity.User;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import com.jeesite.common.collect.ListUtils;
 
@@ -21,10 +21,14 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 /**
  * 采购需求单Entity
  * @author 张雷
- * @version 2018-05-12
+ * @version 2018-05-13
  */
 @Table(name="material_requirements", alias="a", columns={
 		@Column(name="id", attrName="id", label="需求单号", isPK=true),
+		@Column(name="purchase_type", attrName="purchaseType", label="采购类型"),
+		@Column(name="complete_date", attrName="completeDate", label="交货日期"),
+		@Column(name="contract", attrName="contract", label="工单号"),
+		@Column(name="cutomer", attrName="cutomer", label="客户名称"),
 		@Column(name="applicant", attrName="applicant.userCode", label="申请人"),
 		@Column(name="application_date", attrName="applicationDate", label="申请日期"),
 		@Column(name="reviewer", attrName="reviewer.userCode", label="审批人"),
@@ -32,13 +36,13 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="review_status", attrName="reviewStatus", label="审核状态"),
 		@Column(includeEntity=DataEntity.class),
 	}, joinTable={
-		@JoinTable(type=Type.LEFT_JOIN, entity=User.class, attrName="applicant", alias="u2",
-			on="u2.user_code = a.applicant", columns={
+		@JoinTable(type=Type.LEFT_JOIN, entity=User.class, attrName="applicant", alias="u6",
+			on="u6.user_code = a.applicant", columns={
 				@Column(name="user_code", label="用户编码", isPK=true),
 				@Column(name="user_name", label="用户名称", isQuery=false),
 		}),
-		@JoinTable(type=Type.LEFT_JOIN, entity=User.class, attrName="reviewer", alias="u4",
-			on="u4.user_code = a.reviewer", columns={
+		@JoinTable(type=Type.LEFT_JOIN, entity=User.class, attrName="reviewer", alias="u8",
+			on="u8.user_code = a.reviewer", columns={
 				@Column(name="user_code", label="用户编码", isPK=true),
 				@Column(name="user_name", label="用户名称", isQuery=false),
 		}),
@@ -47,6 +51,10 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 public class MaterialRequirements extends DataEntity<MaterialRequirements> {
 	
 	private static final long serialVersionUID = 1L;
+	private String purchaseType;		// 采购类型
+	private Date completeDate;		// 交货日期
+	private String contract;		// 工单号
+	private String cutomer;		// 客户名称
 	private User applicant;		// 申请人
 	private Date applicationDate;		// 申请日期
 	private User reviewer;		// 审批人
@@ -60,6 +68,42 @@ public class MaterialRequirements extends DataEntity<MaterialRequirements> {
 
 	public MaterialRequirements(String id){
 		super(id);
+	}
+	
+	@Length(min=0, max=100, message="采购类型长度不能超过 100 个字符")
+	public String getPurchaseType() {
+		return purchaseType;
+	}
+
+	public void setPurchaseType(String purchaseType) {
+		this.purchaseType = purchaseType;
+	}
+	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	public Date getCompleteDate() {
+		return completeDate;
+	}
+
+	public void setCompleteDate(Date completeDate) {
+		this.completeDate = completeDate;
+	}
+	
+	@Length(min=0, max=100, message="工单号长度不能超过 100 个字符")
+	public String getContract() {
+		return contract;
+	}
+
+	public void setContract(String contract) {
+		this.contract = contract;
+	}
+	
+	@Length(min=0, max=100, message="客户名称长度不能超过 100 个字符")
+	public String getCutomer() {
+		return cutomer;
+	}
+
+	public void setCutomer(String cutomer) {
+		this.cutomer = cutomer;
 	}
 	
 	@NotNull(message="申请人不能为空")
