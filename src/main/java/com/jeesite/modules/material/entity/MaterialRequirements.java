@@ -34,6 +34,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="reviewer", attrName="reviewer.userCode", label="审批人"),
 		@Column(name="review_date", attrName="reviewDate", label="审批日期"),
 		@Column(name="review_status", attrName="reviewStatus", label="审核状态"),
+		@Column(name="purchase_status", attrName="purchaseStatus", label="采购进度"),
 		@Column(includeEntity=DataEntity.class),
 	}, joinTable={
 		@JoinTable(type=Type.LEFT_JOIN, entity=User.class, attrName="applicant", alias="u6",
@@ -60,6 +61,7 @@ public class MaterialRequirements extends DataEntity<MaterialRequirements> {
 	private User reviewer;		// 审批人
 	private Date reviewDate;		// 审批日期
 	private String reviewStatus;		// 审核状态
+	private String purchaseStatus;		// 采购进度
 	private List<MaterialChild> materialChildList = ListUtils.newArrayList();		// 子表列表
 	
 	public MaterialRequirements() {
@@ -149,6 +151,15 @@ public class MaterialRequirements extends DataEntity<MaterialRequirements> {
 
 	public void setReviewStatus(String reviewStatus) {
 		this.reviewStatus = reviewStatus;
+	}
+	
+	@Length(min=0, max=64, message="采购进度长度不能超过 64 个字符")
+	public String getPurchaseStatus() {
+		return purchaseStatus;
+	}
+
+	public void setPurchaseStatus(String purchaseStatus) {
+		this.purchaseStatus = purchaseStatus;
 	}
 	
 	public Date getApplicationDate_gte() {
