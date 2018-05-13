@@ -87,9 +87,9 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label">备注信息：</label>
-					<div class="control-inline">
-						<#form:input path="remarks" maxlength="500" class="form-control width-120"/>
+					<label class="control-label">采购进度：</label>
+					<div class="control-inline width-120">
+						<#form:select path="purchaseStatus" dictType="purchase_status" blankOption="true" class="form-control"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -124,7 +124,9 @@ $('#dataGrid').dataGrid({
 		{header:'审核状态', name:'reviewStatus', index:'a.review_status', width:150, align:"center", formatter: function(val, obj, row, act){
 			return js.getDictLabel(${@DictUtils.getDictListJson('review_status')}, val, '${text('未知')}', true);
 		}},
-		{header:'备注信息', name:'remarks', index:'a.remarks', width:150, align:"left"},
+		{header:'采购进度', name:'purchaseStatus', index:'a.purchase_status', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('purchase_status')}, val, '${text('未知')}', true);
+		}},
 		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('material:materialRequirements:edit')){ %>
