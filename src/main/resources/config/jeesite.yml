@@ -72,10 +72,16 @@ jdbc:
 #    maxActive: 20
 #
 #  # 多数据源名称列表，启用方式：@MyBatisDao(dataSourceName="ds2")
-#  dataSourceNames: ds2
+  dataSourceNames: ds2
 #  
 #  # 多数据源配置：ds2
-#  ds2:
+  ds2:
+    type: mysql
+    driver: com.mysql.jdbc.Driver
+    url: jdbc:mysql://123.56.252.158:3306/ifarterp?useSSL=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: '0115'
+    testSql: SELECT 1
 #    type: oracle
 #    driver: oracle.jdbc.driver.OracleDriver
 #    url: jdbc:oracle:thin:@127.0.0.1:1521/orcl
@@ -144,7 +150,7 @@ jdbc:
 #  superAdminCode: system
 #
 #  # 超级管理员获取菜单的最小权重（默认20；>=40二级管理员；>=60系统管理员；>=80超级管理员）
-#  superAdminGetMenuMinWeight: 40
+  superAdminGetMenuMinWeight: 20
 #
 #  # 系统管理员角色编号（客户方管理员使用的角色）
 #  corpAdminRoleCode: corpAdmin
@@ -291,10 +297,10 @@ jdbc:
 #  #shareSessionIdCookieName: ${session.sessionIdCookieName}
 #
 ## MyBatis 相关
-#mybatis:
+mybatis:
 #
 #  # 扫描基础包设置（Aliases、@MyBatisDao），如果多个，用“,”分隔
-#  scanBasePackage: com.jeesite.modules
+  scanBasePackage: com.jeesite.modules,com.jeesite.hellojuny
 #  
 #  # Mapper文件刷新线程
 #  mapper:
