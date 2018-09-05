@@ -23,8 +23,10 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="category", attrName="category", label="采购类型"),
 		@Column(name="type", attrName="type", label="材料类型"),
 		@Column(name="classes", attrName="classes", label="材料类别"),
+		@Column(name="size", attrName="size", label="规格"),
 		@Column(name="number", attrName="number", label="数量"),
 		@Column(name="unit", attrName="unit", label="单位"),
+		@Column(name="remark", attrName="remark", label="备注"),
 	}, orderBy="a.id ASC"
 )
 public class MaterialChild extends DataEntity<MaterialChild> {
@@ -36,8 +38,10 @@ public class MaterialChild extends DataEntity<MaterialChild> {
 	private String category;		// 采购类型
 	private String type;		// 材料类型
 	private String classes;		// 材料类别
+	private String size;		// 规格
 	private Double number;		// 数量
 	private String unit;		// 单位
+	private String remark;		// 备注
 	
 	public MaterialChild() {
 		this(null);
@@ -102,6 +106,17 @@ public class MaterialChild extends DataEntity<MaterialChild> {
 		this.classes = classes;
 	}
 	
+	@Length(min=0, max=100, message="规格长度不能超过 100 个字符")
+	public String getSize() {
+		return size;
+	}
+
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
+
 	public Double getNumber() {
 		return number;
 	}
@@ -118,5 +133,17 @@ public class MaterialChild extends DataEntity<MaterialChild> {
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
+
+	@Length(min=0, max=255, message="备注长度不能超过 255个字符")
+	public String getRemark() {
+		return remark;
+	}
+
+	
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	
 	
 }

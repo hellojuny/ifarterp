@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jeesite.common.entity.Page;
 import com.jeesite.common.service.CrudService;
 import com.jeesite.modules.common.utils.SeqUtils;
+import com.jeesite.modules.finance.dao.SalesPerformanceDao;
 import com.jeesite.modules.material.dao.MaterialInfoDao;
 import com.jeesite.modules.material.entity.MaterialInfo;
 
@@ -24,6 +25,9 @@ public class MaterialInfoService extends CrudService<MaterialInfoDao, MaterialIn
 	
 	@Autowired
 	protected MaterialInfoDao dao;
+	
+	@Autowired
+	protected SalesPerformanceDao salesDao;
 	
 	/**
 	 * 获取单条数据

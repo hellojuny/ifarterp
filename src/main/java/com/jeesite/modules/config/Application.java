@@ -15,7 +15,7 @@ import com.jeesite.common.io.PropertiesUtils;
  * @author ThinkGem
  * @version 2018-1-8
  */
-@SpringBootApplication(scanBasePackages={"com.jeesite.modules"})
+@SpringBootApplication(scanBasePackages={"com.jeesite.modules", "com.jeesite.hellojuny"})
 public class Application extends SpringBootServletInitializer {
 	
 	public static void main(String[] args) {

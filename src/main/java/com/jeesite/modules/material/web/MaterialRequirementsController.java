@@ -3,9 +3,12 @@
  */
 package com.jeesite.modules.material.web;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +25,7 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.material.entity.MaterialInfo;
 import com.jeesite.modules.material.entity.MaterialRequirements;
 import com.jeesite.modules.material.service.MaterialRequirementsService;
+import com.jeesite.modules.sys.utils.UserUtils;
 
 /**
  * 采购需求单Controller
@@ -65,24 +69,70 @@ public class MaterialRequirementsController extends BaseController {
 	}
 
 	/**
-	 * 查看编辑表单
+	 * 查看编辑表单（创建人）
 	 */
 	@RequiresPermissions("material:materialRequirements:view")
 	@RequestMapping(value = "form")
 	public String form(MaterialRequirements materialRequirements, Model model) {
+		if (materialRequirements.getIsNewRecord()) {
+			materialRequirements.setReviewStatus("0");
+			materialRequirements.setPurchaseStatus("100");
+			materialRequirements.setApplicant(UserUtils.getUser());
+			materialRequirements.setApplicationDate(new Date());
+		}
 		model.addAttribute("materialRequirements", materialRequirements);
 		MaterialInfo materialInfo = new MaterialInfo();
 		model.addAttribute("materialInfo", materialInfo);
 		return "modules/material/materialRequirementsForm";
 	}
+	
+	/**
+	 * 查看编辑表单（审核人）
+	 */
+	@RequiresPermissions("material:materialRequirements:review")
+	@RequestMapping(value = "formByReview")
+	public String formByReview(MaterialRequirements materialRequirements, Model model) {
+		if ("0".equals(materialRequirements.getReviewStatus())) {
+			materialRequirements.setReviewer(UserUtils.getUser());
+			materialRequirements.setReviewDate(new Date());
+		}
+		model.addAttribute("materialRequirements", materialRequirements);
+		MaterialInfo materialInfo = new MaterialInfo();
+		model.addAttribute("materialInfo", materialInfo);
+		return "modules/material/materialRequirementsFormByReview";
+	}
+	
+	/**
+	 * 查看编辑表单（采购员）
+	 */
+	@RequiresPermissions("material:materialRequirements:status")
+	@RequestMapping(value = "formByPurchase")
+	public String formByPurchase(MaterialRequirements materialRequirements, Model model) {
+		model.addAttribute("materialRequirements", materialRequirements);
+		MaterialInfo materialInfo = new MaterialInfo();
+		model.addAttribute("materialInfo", materialInfo);
+		return "modules/material/materialRequirementsFormByPurchase";
+	}
 
 	/**
 	 * 保存采购需求单
 	 */
-	@RequiresPermissions("material:materialRequirements:edit")
+	@RequiresPermissions(value={"material:materialRequirements:edit","material:materialRequirements:status"},logical=Logical.OR)
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated MaterialRequirements materialRequirements) {
+		materialRequirementsService.save(materialRequirements);
+		return renderResult(Global.TRUE, "保存采购需求单成功！");
+	}
+	
+	/**
+	 * 保存采购需求单（审核人）
+	 */
+	@RequiresPermissions("material:materialRequirements:review")
+	@PostMapping(value = "saveByReview")
+	@ResponseBody
+	public String saveByReview(@Validated MaterialRequirements materialRequirements) {
+		materialRequirements.setReviewStatus("1");
 		materialRequirementsService.save(materialRequirements);
 		return renderResult(Global.TRUE, "保存采购需求单成功！");
 	}

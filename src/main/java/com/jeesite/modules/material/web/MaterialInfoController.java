@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jeesite.common.config.Global;
 import com.jeesite.common.entity.Page;
-import com.jeesite.common.mybatis.mapper.SqlMap;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.material.entity.MaterialInfo;
 import com.jeesite.modules.material.service.MaterialInfoService;
