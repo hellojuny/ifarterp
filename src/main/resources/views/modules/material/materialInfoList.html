@@ -45,6 +45,7 @@
 						<#form:select path="classes" dictType="purchase_type" blankOption="true" class="form-control"/>
 					</div>
 				</div>
+				<input type="hidden" id="brand" name="brand">
 				<div class="form-group">
 					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
 					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
@@ -118,7 +119,7 @@ function typeChg() {
 
 // 初始化DataGrid对象
 $('#dataGrid').dataGrid({
-	searchForm: $("#searchForm"),
+	//searchForm: $("#searchForm"),
 	columnModel: [
 		{header:'编号', name:'id', index:'a.id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
 			return '<a href="${ctx}/material/materialInfo/form?id='+row.id+'" class="btnList" data-title="${text('编辑材料清单')}">'+(val||row.id)+'</a>';
