@@ -1,0 +1,205 @@
+<% layout('/layouts/default.html', {title: '部门销售额汇总', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('部门销售额汇总')}
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${salesPerformance}" method="post" class="form-inline">
+				<div class="form-group">
+					<label class="control-label">${text('年月')}：</label>
+					<div class="control-inline">
+						<#form:input path="yearMonthStart" readonly="true" maxlength="20" class="form-control Wdate-date"
+							dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy/MM',isShowClear:false,onpicked:function(){yearMonthEnd.click()}});"/>
+						&nbsp;--&nbsp;
+						<#form:input path="yearMonthEnd" readonly="true" maxlength="20" class="form-control Wdate-date"
+							dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy/MM',isShowClear:false});"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button class="btn btn-primary btn-sm" type="button" onclick="search()">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<div class="form-unit"></div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="chart">
+						<div id="myChart" style="height:600px;width:90%"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="box-footer">
+			<div class="row">
+				<div class="col-sm-4 col-xs-6">
+					<div class="description-block border-right">
+						<span class="description-percentage text-green"><i class="fa fa-caret-right"></i> <span id="copyTotalsRate"> </span></span>
+						<h5 id="copyTotals" class="description-header">￥0</h5>
+						<span class="description-text">图像部</span>
+					</div>
+					<!-- /.description-block -->
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-4 col-xs-6">
+					<div class="description-block border-right">
+						<span class="description-percentage text-green"><i class="fa fa-caret-right"></i> <span id="mountTotalsRate"> </span></span>
+						<h5 id="mountTotals" class="description-header">￥0</h5>
+						<span class="description-text">装裱部</span>
+					</div>
+					<!-- /.description-block -->
+				</div>
+				<!-- /.col -->
+				<div class="col-sm-4 col-xs-6">
+					<div class="description-block border-right">
+						<span class="description-percentage text-green"><i class="fa fa-caret-right"></i> <span id="frameTotalsRate"> </span></span>
+						<h5 id="frameTotals" class="description-header">￥0</h5>
+						<span class="description-text">装框部</span>
+					</div>
+					<!-- /.description-block -->
+				</div>
+			</div>
+			<!-- /.row -->
+		</div>
+				
+	</div>
+</div>
+<% } %>
+<script src="${ctxStatic}/echarts/echarts.js?${_version}"></script>
+<script>
+var nowDate = new Date();
+var curYear = nowDate.getFullYear();
+var curMonth = nowDate.getMonth() + 1;
+if (curMonth < 10) {
+	curMonth = "0" + curMonth;
+}
+$("#yearMonthStart").val(curYear + "/01");
+$("#yearMonthEnd").val(curYear + "/" + curMonth);
+
+var yearMonthStart = $("#yearMonthStart").val().replace("/", "");
+var yearMonthEnd = $("#yearMonthEnd").val().replace("/", "");
+//基于准备好的dom，初始化echarts实例
+var myChart = echarts.init(document.getElementById('myChart'));
+
+var option = {
+    title : {
+        text: '部门月度销售额',
+        subtext: '单位（元）'
+    },
+    tooltip : {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['图像部','装裱部','装框部']
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            data : []
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'图像部',
+            type:'bar',
+            data:[]
+        },
+        {
+            name:'装裱部',
+            type:'bar',
+            data:[]
+        },
+        {
+            name:'装框部',
+            type:'bar',
+            data:[]
+        }
+    ]
+};
+drawCharts();
+
+
+function search() {
+	getSearchConf();
+	drawCharts();
+}
+
+function getSearchConf() {
+	yearMonthStart = $("#yearMonthStart").val().replace("/", "");
+	yearMonthEnd = $("#yearMonthEnd").val().replace("/", "");
+}
+
+function drawCharts() {
+	$.ajax({
+		type:"POST",
+		url:"${ctx}/finance/salesPerformance/find",
+		data : {"yearMonthStart":yearMonthStart,"yearMonthEnd":yearMonthEnd},
+		dataType:"json",
+		success: function(result){
+			var linNames = [];
+			var linCopyTotals = [];
+			var linMountTotals = [];
+			var linFrameTotals = [];
+			
+			var copyTotals = 0.0;
+			var mountTotals = 0.0;
+			var frameTotals = 0.0;
+            $.each(result, function(idx, values) {
+            	linNames.push(parseInt(values.yearMonth.substring(4)) + "月");
+            	linCopyTotals.push(values.copyTotals);
+            	linMountTotals.push(values.mountTotals);
+            	linFrameTotals.push(values.frameTotals);
+            	
+            	copyTotals = copyTotals + values.copyTotals;
+            	mountTotals = mountTotals + values.mountTotals;
+            	frameTotals = frameTotals + values.frameTotals;
+            });
+            option.xAxis[0].data = linNames;
+            option.series[0].data = linCopyTotals;
+            option.series[1].data = linMountTotals;
+            option.series[2].data = linFrameTotals;
+            myChart.setOption(option);
+            
+            var total = copyTotals + mountTotals + frameTotals;
+            
+            $("#copyTotals")[0].innerHTML = FormatMoney(copyTotals.toString());
+            $("#mountTotals")[0].innerHTML = FormatMoney(mountTotals.toString());
+            $("#frameTotals")[0].innerHTML = FormatMoney(frameTotals.toString());
+            
+            $("#copyTotalsRate")[0].innerHTML = Math.round(copyTotals / total * 100) + "%";
+            $("#mountTotalsRate")[0].innerHTML = Math.round(mountTotals / total * 100) + "%";
+            $("#frameTotalsRate")[0].innerHTML = Math.round(frameTotals / total * 100) + "%";
+		}
+	});
+}
+
+function FormatMoney(s) {  
+    if (/[^0-9\.]/.test(s)) return "invalid value";  
+    s = s.replace(/^(\d*)$/, "$1.");  
+    s = (s + "00").replace(/(\d*\.\d\d)\d*/, "$1");  
+    s = s.replace(".", ",");  
+    var re = /(\d)(\d{3},)/;  
+    while (re.test(s))  
+        s = s.replace(re, "$1,$2");  
+    s = s.replace(/,(\d\d)$/, ".$1");  
+    return "￥" + s.replace(/^\./, "0.")  
+}
+</script>

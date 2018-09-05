@@ -1,0 +1,378 @@
+<% layout('/layouts/default.html', {title: '采购需求单管理', libs: ['validate','dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('采购需求单审核')}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${materialRequirements}" action="${ctx}/material/materialRequirements/saveByReview" method="post" class="form-horizontal">
+			<div class="box-body">
+				<#form:hidden path="id"/>
+				<div class="form-unit">${text('基本信息')}</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> 采购类型：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:radio path="purchaseType" dictType="purchase_reason" class="form-control" disabled="disabled"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> 交货日期：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="completeDate" readonly="true" maxlength="20" class="form-control Wdate"
+									dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"  disabled="disabled"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> 工单号：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="contract" maxlength="100" class="form-control"  disabled="disabled"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> 客户名称：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="cutomer" maxlength="100" class="form-control"  disabled="disabled"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="form-unit">${text('需求明细')}</div>
+				<div class="ml10 mr10">
+					<table id="materialChildDataGrid"></table>
+				</div>
+				
+				<div class="form-unit">${text('申请状况')}</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> 申请人：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:treeselect id="applicant" title="${text('用户选择')}"
+									path="applicant.userCode" labelPath="applicant.userName"
+									url="${ctx}/sys/office/treeData?isLoadUser=true"
+									class=" required" allowClear="true" readonly="true"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> 申请日期：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="applicationDate" readonly="true" maxlength="20" class="form-control Wdate required"
+									dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" disabled="disabled"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> 审核人：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:treeselect id="reviewer" title="${text('用户选择')}"
+									path="reviewer.userCode" labelPath="reviewer.userName"
+									url="${ctx}/sys/office/treeData?isLoadUser=true"
+									allowClear="true" readonly="true"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> 审核日期：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="reviewDate" readonly="true" maxlength="20" class="form-control Wdate"
+									dataFormat="date" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-unit">${text('进度状况')}</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> 审核状态：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:radio path="reviewStatus" dictType="review_status" class="form-control" disabled="disabled"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> 采购进度：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:radio path="purchaseStatus" dictType="purchase_status" class="form-control" disabled="disabled"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('material:materialRequirements:review') && (materialRequirements.reviewStatus != '1')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('审核')}</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width:60%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					材料清单
+				</h4>
+			</div>
+			<div class="modal-body">
+				<#form:form id="searchForm" model="${materialInfo}" action="${ctx}/material/materialInfo/listData" method="post" class="form-inline"
+					data-page-no="${parameter.pageNo}" data-page-size="15" data-order-by="${parameter.orderBy}">
+					<input type="hidden" id="brand" name="brand">
+					<div class="row">
+						<div class="col-xs-4">
+							<div class="form-group">
+								<label class="control-label">编　　号：</label>
+								<div class="control-inline">
+									<#form:input path="id" maxlength="8" class="form-control width-180"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="form-group">
+								<label class="control-label">材料名称：</label>
+								<div class="control-inline">
+									<#form:input path="name" maxlength="200" class="form-control width-180"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="form-group">
+								<label class="control-label">采购类型：</label>
+								<div class="control-inline width-160">
+									<#form:select path="category" dictType="purchase_type" blankOption="true" class="form-control"/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4">
+							<div class="form-group">
+								<label class="control-label">材料类型：</label>
+								<div class="control-inline width-160">
+									<#form:select path="type" dictType="purchase_type" blankOption="true" class="form-control"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="form-group">
+								<label class="control-label">材料类别：</label>
+								<div class="control-inline width-160">
+									<#form:select path="classes" dictType="purchase_type" blankOption="true" class="form-control"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="form-group">
+								<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+								<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+							</div>
+						</div>
+					</div>
+				</#form:form>
+				<table id="popDataGrid"></table>
+				<div id="popDataGridPage"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+				</button>
+				<button type="button" class="btn btn-primary" onclick="submit()">
+					提交
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+<% } %>
+<script>
+var fid = $("#id").val();
+var len = 0;
+//var childObjArray = new Array();
+//初始化需求明细DataGrid对象
+$("#materialChildDataGrid").dataGrid({
+
+	data: ${toJson(materialRequirements.materialChildList)},
+	datatype: "local", // 设置本地数据
+	autoGridHeight: function(){return 'auto'}, // 设置自动高度
+	sortable: true,
+	sortname: 'mid',
+	// 设置数据表格列
+	columnModel: [
+		{header:'状态', name:'status', editable:true, hidden:true},
+		{header:'主键', name:'id', editable:true, hidden:true},
+		{header:'编号', name:'mid', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'100', readonly: 'readonly', 'class':'form-control required '}},
+		{header:'父表主键', name:'materialRequirements.id', editable:true, hidden:true},
+		{header:'材料名称', name:'name', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'200', readonly: 'readonly', 'class':'form-control'}},
+		{header:'采购类型', name:'category', width:100, editable:true, edittype:'text', editoptions:{'maxlength':'200', readonly: 'readonly', 'class':'form-control'}},
+		{header:'材料类型', name:'type', width:100, editable:true, edittype:'text', editoptions:{'maxlength':'200', readonly: 'readonly', 'class':'form-control'}},
+		{header:'材料类别', name:'classes', width:100, editable:true, edittype:'text', editoptions:{'maxlength':'200', readonly: 'readonly', 'class':'form-control'}},
+		{header:'规格', name:'size', width:150, editable:true, edittype:'text', editoptions:{'class':'form-control'}},
+		{header:'数量', name:'number', width:150, editable:true, edittype:'text', editoptions:{readonly: 'readonly', 'class':'form-control number required'}},
+		{header:'单位', name:'unit', width:100, disabled:false,
+			/*editable:true, edittype:'select', editoptions:{readonly: 'readonly', 'class':'form-control required',
+				items: $.merge([{dictLabel:'&nbsp;',dictValue:''}], ${@DictUtils.getDictListJson('unit')}),
+				itemLabel: 'dictLabel', itemValue: 'dictValue', dataInit: function(element){
+					$(element).select2().on("change",function(){$(this).valid()});
+				}
+			}*/
+			formatter: function(val, obj, row, act){
+				return js.getDictLabel(${@DictUtils.getDictListJson('unit')}, val, '${text('未知')}', true);
+			}
+		},
+		{header:'备注', name:'remark', width:150, editable:true, edittype:'textarea', editoptions:{readonly: 'readonly', 'class':'form-control', 'rows':'1'}}
+	],
+	
+	// 编辑表格参数
+	editGrid: true,				// 是否是编辑表格
+	editGridInitRowNum: 0,		// 编辑表格的初始化新增行数
+	//editGridAddRowBtn: $('#materialChildDataGridAddRowBtn'),	// 子表增行按钮
+	//editGridAddRowInitData: {id: '', status: Global.STATUS_NORMAL},	// 新增行的时候初始化的数据
+	
+	// 编辑表格的提交数据参数
+	editGridInputFormListName: 'materialChildList', // 提交的数据列表名
+	editGridInputFormListAttrs: 'status,id,MaterialRequirements.id,mid,name,category,type,classes,number,unit,', // 提交数据列表的属性字段
+	
+	afterInsertRow: function(rowid, rowdata, rowelem){
+		//childIdMap.set(rowdata.mid, rowdata.mid);
+	},
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+
+$(function () { $('#myModal').on('shown.bs.modal', function () {
+	
+		var midArray = new Array();
+		$("[name=mid]").each(function(i, el){
+			midArray.push(el.value);
+		});
+		len = midArray.length;
+		$("#brand").val(midArray);
+		
+		$('#popDataGrid').dataGrid({
+			searchForm: $("#searchForm"),
+			autoGridHeight: function(){return 'auto'}, // 设置自动高度
+			multiselect: true,
+			columnModel: [
+				{header:'编号', name:'id', index:'a.id', width:150, align:"left"},
+				{header:'材料名称', name:'name', index:'a.name', width:150, align:"left"},
+				{header:'采购类型', name:'category', index:'a.category', width:150, align:"center", formatter: function(val, obj, row, act){
+					return js.getDictLabel(${@DictUtils.getDictListJson('purchase_type')}, val, '${text('未知')}', true);
+				}},
+				{header:'材料类型', name:'type', index:'a.type', width:150, align:"center", formatter: function(val, obj, row, act){
+					return js.getDictLabel(${@DictUtils.getDictListJson('purchase_type')}, val, '${text('未知')}', true);
+				}},
+				{header:'材料类别', name:'classes', index:'a.classes', width:150, align:"center", formatter: function(val, obj, row, act){
+					return js.getDictLabel(${@DictUtils.getDictListJson('purchase_type')}, val, '${text('未知')}', true);
+				}},
+				{header:'品牌', name:'brand', index:'a.brand', width:150, align:"left"},
+				{header:'型号', name:'nmode', index:'a.nmode', width:150, align:"left"},
+				{header:'材质', name:'technique', index:'a.technique', width:150, align:"left"}
+			],
+			onSelectRow: function(rowid, status){
+				/*if (status) {
+					var obj = new Object();
+					obj.mid = rowid;
+					obj.name = $('#popDataGrid').getRowData(rowid).name;
+					obj.category = $('#popDataGrid').getRowData(rowid).category;
+					obj.type = $('#popDataGrid').getRowData(rowid).type;
+					obj.classes = $('#popDataGrid').getRowData(rowid).classes;
+					var tmpFid = new Object();
+					tmpFid.id = fid;
+					obj.materialRequirements = tmpFid;
+					childObjArray.push(obj);
+				} else {
+					childObjMap.delete(rowid);
+				}*/
+			},
+			afterInsertRow: function(rowid, rowdata, rowelem){
+				/*if (childIdMap.has(rowid)) {
+					$("#" + rowid + " :checkbox").prop("checked","checked");
+					$("#" + rowid + " :checkbox").prop("disabled","disabled");
+				}*/
+			},
+			// 加载成功后执行事件
+			ajaxSuccess: function(data){
+				
+			}
+		}).trigger('reloadGrid');
+	});
+});
+ 
+function submit() {
+	$('#popDataGrid').dataGrid("getGridParam", "selarrrow").forEach(function (rowid, idx) {
+		var tmpData = new Object();
+		tmpData.mid = rowid;
+		tmpData.name = $('#popDataGrid').getRowData(rowid).name;
+		tmpData.category = $('#popDataGrid').getRowData(rowid).category;
+		tmpData.type = $('#popDataGrid').getRowData(rowid).type;
+		tmpData.classes = $('#popDataGrid').getRowData(rowid).classes;
+		var tmpFid = new Object();
+		tmpFid.id = fid;
+		tmpData.materialRequirements = tmpFid;
+		$("#materialChildDataGrid").addRowData(len + idx, tmpData);
+		$("#materialChildDataGrid").dataGrid('editRow', len + idx, false);
+	});
+	/*childObjMap.forEach(function (item, key, mapObj) {
+		$("#materialChildDataGrid").addRowData(key, item);
+		$("#materialChildDataGrid").dataGrid('editRow', key, false);
+	});*/
+	$("#materialChildDataGrid").sortGrid('mid', false);
+	$('#myModal').modal('hide');
+}
+</script>
+<script>
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+</script>

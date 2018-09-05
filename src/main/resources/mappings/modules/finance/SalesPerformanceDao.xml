@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.finance.dao.SalesPerformanceDao">
+	
+	<!-- 查询数据-->
+	<select id="findList" resultType="com.jeesite.modules.finance.entity.SalesPerformance">
+		SELECT
+			yearMonth,
+			copyTotals,
+			mountTotals,
+			frameTotals
+		FROM
+			(SELECT
+				DATE_FORMAT(ss.create_time,'%Y%m') AS yearMonth,
+				SUM(ssw.copy_totals + ssw.scan_totals) AS copyTotals,
+				SUM(ssw.mount_totals) AS mountTotals,
+				SUM(ssw.frame_totals) AS frameTotals
+			FROM service_sale ss
+				left join service_sale$workdetails ssw
+				ON ss.pkey = ssw.pkey
+			GROUP BY
+				DATE_FORMAT(ss.create_time,'%Y%m')) T
+		WHERE 1 = 1
+		<if test="yearMonthStart != null and yearMonthStart != ''">
+			AND yearMonth &gt;= ${yearMonthStart}
+		</if>
+		<if test="yearMonthEnd != null and yearMonthEnd != ''">
+			AND yearMonth &lt;= ${yearMonthEnd}
+		</if>
+	</select> 
+	
+</mapper>

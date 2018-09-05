@@ -1,0 +1,97 @@
+<% layout('/layouts/default.html', {title: '数据导入导出', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('数据导入导出')}
+			</div>
+		</div>
+		<div class="box-body">
+			<div class="row">
+				<div class="col-sm-offset-4 col-sm-8">
+					<button style="margin-right:30px;" class="btn btn-sm btn-primary"> ${text('数据导入')}</button>
+					<button style="margin-right:30px;" class="btn btn-sm btn-primary"> ${text('数据导出')}</button>
+					<button class="btn btn-sm btn-primary"> ${text('文件下载')}</button>
+				</div>
+			</div>
+			<div class="row" style="margin-top:10px;">
+				<div class="col-xs-6">
+					<div class="form-group">
+						<label class="control-label col-sm-6" title="">
+							<span class="required ">*</span> 导入文件名：<i class="fa icon-question hide"></i></label>
+						<div class="col-sm-6">
+							<#form:select path="file" items="${fileList}" itemLabel="fileName" itemValue="file" class="form-control required" />
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="form-group">
+						<div class="col-sm-2">
+							<#form:checkbox path="replaceFile" label="全选择" class="form-control"/>
+						</div>
+						<div class="col-sm-10">
+							<#form:checkbox path="replaceFile2" label="初期化" class="form-control"/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-unit"></div>
+			<div class="form-unit">${text('业务表一览')}</div>
+			<div>
+				<%
+				for (table in bsTableList) { 
+					if (tableLP.index % 5 == 1) {
+				%>
+					<div class="row" style="margin:10px;">
+				<%
+					}
+				%>
+					<div class="col-sm-2">
+						<#form:checkbox path="tables" value="${table.tableName}" label="${table.tableComment}" class="form-control" onclick="change222()"/>
+					</div>
+				<%
+					if (tableLP.index % 5 == 0 || tableLP.last) {
+				%>
+					</div>
+				<% 
+					}
+				}
+				%>
+			</div>
+			<div class="form-unit"></div>
+			<div class="form-unit">${text('系统表一览')}</div>
+			<div>
+				<%
+				for (table in sysTableList) { 
+					if (tableLP.index % 5 == 1) {
+				%>
+					<div class="row" style="margin:10px;">
+				<%
+					}
+				%>
+					<div class="col-sm-2">
+						<#form:checkbox path="tables" value="${table.tableName}" label="${table.tableComment}" class="form-control"/>
+					</div>
+				<%
+					if (tableLP.index % 5 == 0 || tableLP.last) {
+				%>
+					</div>
+				<% 
+					}
+				}
+				%>
+			</div>
+		</div>
+		<div class="box-footer">
+			
+		</div>
+				
+	</div>
+</div>
+<% } %>
+<script>
+	function change222() {
+		debugger;
+		$("#replaceFile").indeterminate = true;
+	}
+</script>
